@@ -1,0 +1,10 @@
+2/18    In case of MEM-AP error, reset it by lowering openocd adapter speed, replug it and press down the NRST pin while
+        uploading code from openocd
+
+        Fixed a bug that sys_tick_isr was not included in sys_tick.h
+
+How to write a header file:
+        In header file, only include necessary basic libraries like <stdint.h> if using uint32_t.
+        Don't start #ifndef with two underscores because that might trigger incompatibilities, use auto generated identifier instead
+        Don't add #ifdef __cplusplus unless using c++ (dead weight otherwise)
+        All the extra vendor libraries and other included project files go in the .c file
