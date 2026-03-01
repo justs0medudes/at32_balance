@@ -70,21 +70,41 @@ void periph_mpu_get(uint8_t *data) {
     SPI3_CS1;
 }
 
+
+mpu6500_t mpu;
 void periph_mpu_handle(void) {
     periph_mpu_get(periph_mpu_data);
 
-    int16_t ax = (periph_mpu_data[0]<<8|periph_mpu_data[1]);
-    int16_t ay = (periph_mpu_data[2]<<8|periph_mpu_data[3]);
-    int16_t az = (periph_mpu_data[4]<<8|periph_mpu_data[5]);
+    // extract raw data
+    mpu.acc.raw.x = ((int16_t)periph_mpu_data[0]<<8|periph_mpu_data[1]);
+    mpu.acc.raw.y = ((int16_t)periph_mpu_data[2]<<8|periph_mpu_data[3]);
+    mpu.acc.raw.z = ((int16_t)periph_mpu_data[4]<<8|periph_mpu_data[5]);
+    mpu.gyro.raw.x = ((int16_t)periph_mpu_data[8]<<8|periph_mpu_data[9]);
+    mpu.gyro.raw.y = ((int16_t)periph_mpu_data[10]<<8|periph_mpu_data[11]);
+    mpu.gyro.raw.z = ((int16_t)periph_mpu_data[12]<<8|periph_mpu_data[13]);
 
-    float ax_g = ax / 4096.0f;
-    float ay_g = ay / 4096.0f;
-    float az_g = az / 4096.0f;
+    // scale raw data
+    mpu.acc.scale.x = (float)mpu.acc.raw.x / 4096.0f;
+    mpu.acc.scale.y = (float)mpu.acc.raw.y / 4096.0f;
+    mpu.acc.scale.z = (float)mpu.acc.raw.z / 4096.0f;
+    mpu.gyro.scale.x = (float)mpu.gyro.raw.x / 16.4f;
+    mpu.gyro.scale.y = (float)mpu.gyro.raw.y / 16.4f;
+    mpu.gyro.scale.z = (float)mpu.gyro.raw.z / 16.4f;
 
-    float roll = (ay_g/az_g)*57.2958f;
-    int16_t roll_x100 = (int16_t)(roll * 100.0f);
+    // filter
+    mpu.acc.filter.x += (mpu.acc.scale.x - mpu.acc.filter.x) * 0.01f;
+    mpu.acc.filter.y += (mpu.acc.scale.y - mpu.acc.filter.y) * 0.01f;
+    mpu.acc.filter.z += (mpu.acc.scale.z - mpu.acc.filter.z) * 0.01f;
+    mpu.gyro.filter.x += (mpu.gyro.scale.x - mpu.gyro.filter.x) * 0.05f;
+    mpu.gyro.filter.y += (mpu.gyro.scale.y - mpu.gyro.filter.y) * 0.05f;
+    mpu.gyro.filter.z += (mpu.gyro.scale.z - mpu.gyro.filter.z) * 0.05f;
 
-    char buffer[64];
-    sprintf(buffer, "Roll: %d.%02d\r\n", roll_x100 / 100, abs(roll_x100 % 100));
-    sys_usart3_send((uint8_t*)buffer, strlen(buffer));
+    // convert
+    mpu.acc.angle.x = atan2f(mpu.acc.filter.y, mpu.acc.filter.z)*57.2957795f;
+    mpu.acc.angle.y = -atan2f(mpu.acc.filter.x, mpu.acc.filter.z)*57.2957795f;
+
+    mpu.angle.x += mpu.gyro.filter.x * 0.001f;
+    mpu.angle.x = mpu.angle.x * 0.999f + mpu.acc.angle.x * 0.001f;
+    mpu.angle.y += mpu.gyro.filter.y * 0.001f;
+    mpu.angle.y = mpu.angle.y * 0.999f + mpu.acc.angle.y * 0.001f;
 }

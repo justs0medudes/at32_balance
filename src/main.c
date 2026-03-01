@@ -46,6 +46,21 @@ int main(void) {
         delay_ms(500);
         */
         periph_mpu_handle();
-        delay_ms(50);
+        char buffer[64];
+
+        static uint16_t print_divider;
+        print_divider++;
+
+        if (print_divider >= 50) {
+            print_divider = 0;
+            int32_t ax100 = (int32_t)(mpu.angle.x * 100.0f);
+            int32_t ay100 = (int32_t)(mpu.angle.y * 100.0f);
+            sprintf(buffer,
+                "Angle X: %ld.%02ld Angle Y: %ld.%02ld\r\n",
+                ax100/100,labs(ax100%100),
+                ay100 / 100,labs(ay100 % 100));
+            sys_usart3_send((uint8_t*)buffer, strlen(buffer));
+        }
+        delay_ms(1);
     }
 }
