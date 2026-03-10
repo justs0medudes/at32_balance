@@ -43,6 +43,22 @@ void sys_gpio_init(void) {
 
     gpio_pin_remap_config(USART3_GMUX_0011, TRUE);
 
+    // configure SPI1 pins (MA732)
+    gpio_pin_remap_config(SPI1_GMUX_0001, TRUE);
+    gpio_init_struct.gpio_pins = GPIO_PINS_3 | GPIO_PINS_4 | GPIO_PINS_5;
+    gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
+    gpio_init_struct.gpio_pull = GPIO_PULL_UP;
+    gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
+    gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
+    gpio_init(GPIOB, &gpio_init_struct);
+
+    gpio_init_struct.gpio_pins = GPIO_PINS_5 | GPIO_PINS_7;
+    gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
+    gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
+    gpio_init_struct.gpio_mode = GPIO_MODE_OUTPUT;
+    gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
+    gpio_init(GPIOD, &gpio_init_struct);
+
     // configure SPI3 pins (MPU6500)
     gpio_pin_remap_config(SPI3_GMUX_0011, TRUE);
     gpio_pin_remap_config(SWJTAG_GMUX_010, TRUE); // not sure what this does yet
@@ -52,7 +68,7 @@ void sys_gpio_init(void) {
     gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
     gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
     gpio_init(GPIOC, &gpio_init_struct);
-
+    
     gpio_init_struct.gpio_pins = GPIO_PINS_15;
     gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
     gpio_init_struct.gpio_pull = GPIO_PULL_NONE;

@@ -65,6 +65,7 @@ void sys_periph_clock_init(void)
     crm_periph_clock_enable(CRM_GPIOB_PERIPH_CLOCK, TRUE);
     crm_periph_clock_enable(CRM_GPIOC_PERIPH_CLOCK, TRUE);
     crm_periph_clock_enable(CRM_GPIOD_PERIPH_CLOCK, TRUE);
+    crm_periph_clock_enable(CRM_SPI1_PERIPH_CLOCK, TRUE);
     crm_periph_clock_enable(CRM_SPI3_PERIPH_CLOCK, TRUE);
     crm_periph_clock_enable(CRM_TMR2_PERIPH_CLOCK, TRUE);
     crm_periph_clock_enable(CRM_USART3_PERIPH_CLOCK, TRUE);

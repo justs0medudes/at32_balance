@@ -41,6 +41,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/src/sys_usart.c
     ${CMAKE_SOURCE_DIR}/src/periph_led.c
     ${CMAKE_SOURCE_DIR}/src/periph_mpu.c
+    ${CMAKE_SOURCE_DIR}/src/periph_encoder.c
 
     # toolchain support files
     ${CMAKE_SOURCE_DIR}/syscalls.c

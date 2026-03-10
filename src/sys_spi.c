@@ -7,6 +7,32 @@
 #include "at32f403a_407_spi.h"
 #include "sys_delay.h"
 
+
+// SPI1 is used for the encoder data
+// Pinout: SPI1_MOSI: PB5
+// SPI1_MISO: PB4
+// SPI1_CLK: PB3
+// SPI1_CS1(Encoder2): PD7
+// SPI1_CS0(Encoder1): PD5
+void sys_spi1_init(void) {
+    spi_enable(SPI1, FALSE);
+    spi_init_type spi_init_struct;
+    spi_default_para_init(&spi_init_struct);
+
+    spi_init_struct.transmission_mode = SPI_TRANSMIT_FULL_DUPLEX;
+    spi_init_struct.master_slave_mode = SPI_MODE_MASTER;
+    spi_init_struct.mclk_freq_division = SPI_MCLK_DIV_4;
+    spi_init_struct.first_bit_transmission = SPI_FIRST_BIT_MSB;
+    spi_init_struct.frame_bit_num = SPI_FRAME_8BIT;
+    spi_init_struct.clock_polarity = SPI_CLOCK_POLARITY_HIGH;
+    spi_init_struct.clock_phase = SPI_CLOCK_PHASE_2EDGE;
+    spi_init_struct.cs_mode_selection = SPI_CS_SOFTWARE_MODE;
+    spi_init(SPI1, &spi_init_struct);
+    spi_enable(SPI1, TRUE);
+    delay_ms(10);
+    SPI1_0CS1;
+    SPI1_1CS1;
+}
 void sys_spi3_init(void) {
     spi_enable(SPI3, FALSE);
     spi_init_type spi_init_struct;
@@ -26,6 +52,26 @@ void sys_spi3_init(void) {
     delay_ms(10);
 
     SPI3_CS1; // Important here because floating CS pin can cause the low signal to not be recognized
+}
+
+uint8_t sys_spi1_txrx(uint8_t data)
+{
+    uint8_t cnt=0;
+    while(spi_i2s_flag_get(SPI1, SPI_I2S_TDBE_FLAG) == RESET) //等待SPI发送标志位空
+    {
+        cnt++;
+        if(cnt>200)return 0;
+    }
+    SPI1->dt = data;
+
+    cnt=0;
+
+    while(spi_i2s_flag_get(SPI1, SPI_I2S_RDBF_FLAG) == RESET) //等待SPI接收标志位空
+    {
+        cnt++;
+        if(cnt>200)return 0;
+    }
+    return SPI1->dt; //接收数据
 }
 
 uint8_t sys_spi3_txrx(uint8_t data)
