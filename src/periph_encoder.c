@@ -52,9 +52,10 @@ void periph_encoder_handle(void)
     encoder1_last = now1;
     encoder2_last = now2;
 
-    ma732.encoder1.diff = diff1;
-    ma732.encoder2.diff = diff2;
-
+    ma732.encoder1.rawdiff = diff1;
+    ma732.encoder2.rawdiff = diff2;
+    ma732.encoder1.diff += ((float)ma732.encoder1.rawdiff - ma732.encoder1.diff) * 0.1f;
+    ma732.encoder2.diff += ((float)ma732.encoder2.rawdiff - ma732.encoder2.diff) * 0.1f;
     ma732.encoder1.angle = now1;
     ma732.encoder2.angle = now2;
     ma732.encoder1.vel += (ma732.encoder1.diff - ma732.encoder1.vel) * 0.2f;

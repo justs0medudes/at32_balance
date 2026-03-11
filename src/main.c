@@ -18,6 +18,7 @@
 #include "sys_tick.h"
 #include "sys_usart.h"
 #include "periph_mpu.h"
+#include "periph_encoder.h"
 
 int main(void) {
     // Setup system clock, peripheral clocks, and NVIC
@@ -35,6 +36,7 @@ int main(void) {
 
     periph_led_reset();
     periph_mpu_init();
+    periph_encoder_init();
 
     while (1) {
         // const char msg[] = "USART3 is working\r\n";
@@ -46,6 +48,7 @@ int main(void) {
         delay_ms(500);
         */
         periph_mpu_handle();
+        periph_encoder_handle();
         char buffer[64];
 
         static uint16_t print_divider;
@@ -55,10 +58,14 @@ int main(void) {
             print_divider = 0;
             int32_t ax100 = (int32_t)(mpu.angle.x * 100.0f);
             int32_t ay100 = (int32_t)(mpu.angle.y * 100.0f);
+            int32_t e1 = (int32_t)(ma732.encoder1.diff * 100.0f);
+            // int32_t e2 = (int32_t)(ma732.encoder2.diff * 100.0f);
             sprintf(buffer,
-                "Angle X: %ld.%02ld Angle Y: %ld.%02ld\r\n",
-                ax100/100,labs(ax100%100),
-                ay100 / 100,labs(ay100 % 100));
+                // "Angle X: %ld.%02ld Angle Y: %ld.%02ld
+                "E1: %ld.%02ld\r\n",
+                // ax100/100,labs(ax100%100),
+                // ay100 / 100,labs(ay100 % 100),
+                e1/100, labs(e1%100));
             sys_usart3_send((uint8_t*)buffer, strlen(buffer));
         }
         delay_ms(1);
