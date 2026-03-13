@@ -8,10 +8,11 @@ void periph_encoder_init(void);
 void periph_encoder_handle(void);
 
 typedef struct {
-    uint16_t angle;
+    uint16_t rawangle;
     int16_t rawdiff;
-    float diff;
-    float vel;
+    float angle_deg;
+    float diff_rad;
+    float diff_deg;
 }encoder_t;
 
 typedef struct {

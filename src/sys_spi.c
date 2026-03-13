@@ -57,7 +57,7 @@ void sys_spi3_init(void) {
 uint8_t sys_spi1_txrx(uint8_t data)
 {
     uint8_t cnt=0;
-    while(spi_i2s_flag_get(SPI1, SPI_I2S_TDBE_FLAG) == RESET) //等待SPI发送标志位空
+    while(spi_i2s_flag_get(SPI1, SPI_I2S_TDBE_FLAG) == RESET)
     {
         cnt++;
         if(cnt>200)return 0;
@@ -66,12 +66,12 @@ uint8_t sys_spi1_txrx(uint8_t data)
 
     cnt=0;
 
-    while(spi_i2s_flag_get(SPI1, SPI_I2S_RDBF_FLAG) == RESET) //等待SPI接收标志位空
+    while(spi_i2s_flag_get(SPI1, SPI_I2S_RDBF_FLAG) == RESET)
     {
         cnt++;
         if(cnt>200)return 0;
     }
-    return SPI1->dt; //接收数据
+    return SPI1->dt;
 }
 
 uint8_t sys_spi3_txrx(uint8_t data)

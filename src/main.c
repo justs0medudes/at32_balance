@@ -38,7 +38,9 @@ int main(void) {
     periph_mpu_init();
     periph_encoder_init();
 
+    char buffer[64];
     while (1) {
+        /* Usart Test*/
         // const char msg[] = "USART3 is working\r\n";
         /*
         if (sys_usart3_idle_flag == 1) {
@@ -47,25 +49,40 @@ int main(void) {
         }
         delay_ms(500);
         */
+
+        /* loop speed test*/
+        /*
+        //static uint32_t counter;
+        //counter++;
+        if (print_divider >= 1000) {
+            print_divider = 0;
+            sprintf(buffer, "loops: %lu\r\n", counter);
+            sys_usart3_send((uint8_t*)buffer, strlen(buffer));
+            counter = 0;
+        }
+        */
+
         periph_mpu_handle();
         periph_encoder_handle();
-        char buffer[64];
 
         static uint16_t print_divider;
         print_divider++;
 
+        /* Encoder Test*/
         if (print_divider >= 50) {
             print_divider = 0;
-            int32_t ax100 = (int32_t)(mpu.angle.x * 100.0f);
-            int32_t ay100 = (int32_t)(mpu.angle.y * 100.0f);
-            int32_t e1 = (int32_t)(ma732.encoder1.diff * 100.0f);
-            // int32_t e2 = (int32_t)(ma732.encoder2.diff * 100.0f);
+            /* MPU Test*/
+            // int32_t ax100 = (int32_t)(mpu.angle.x * 100.0f);
+            // int32_t ay100 = (int32_t)(mpu.angle.y * 100.0f);
+            int32_t e1 = (int32_t)(ma732.encoder1.diff_rad * 100.0f);
+            int32_t e2 = (int32_t)(ma732.encoder2.diff_rad * 100.0f);
             sprintf(buffer,
-                // "Angle X: %ld.%02ld Angle Y: %ld.%02ld
-                "E1: %ld.%02ld\r\n",
+                // "Angle X: %ld.%02ld Angle Y: %ld.%02ld\r\n",
+                "E1: %ld.%02ld E2: %ld.%02ld\r\n",
                 // ax100/100,labs(ax100%100),
-                // ay100 / 100,labs(ay100 % 100),
-                e1/100, labs(e1%100));
+                // ay100 / 100,labs(ay100 % 100));
+                e1/100, labs(e1%100),
+                e2/100, labs(e2%100));
             sys_usart3_send((uint8_t*)buffer, strlen(buffer));
         }
         delay_ms(1);
