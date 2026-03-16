@@ -5,6 +5,8 @@
 #ifndef AT32_BALANCE_V0_1_SYS_TMR_H
 #define AT32_BALANCE_V0_1_SYS_TMR_H
 
+void sys_tmr1_init(void);
 void sys_tmr2_init(void);
+void sys_tmr8_init(void);
 
 #endif //AT32_BALANCE_V0_1_SYS_TMR_H

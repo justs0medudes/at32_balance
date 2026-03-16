@@ -17,6 +17,7 @@
 #include "sys_dma.h"
 #include "sys_tick.h"
 #include "sys_usart.h"
+#include "periph_motor.h"
 #include "periph_mpu.h"
 #include "periph_encoder.h"
 
@@ -29,7 +30,9 @@ int main(void) {
     sys_delay_init(system_core_clock);
 
     sys_gpio_init();
+    sys_tmr1_init();
     sys_tmr2_init();
+    sys_tmr8_init();
     sys_usart3_init();
     sys_dma1_channel2_init();
     sys_dma1_channel3_init();
@@ -62,7 +65,7 @@ int main(void) {
         }
         */
 
-        periph_mpu_handle();
+        // periph_mpu_handle();
         periph_encoder_handle();
 
         static uint16_t print_divider;
@@ -85,6 +88,10 @@ int main(void) {
                 e2/100, labs(e2%100));
             sys_usart3_send((uint8_t*)buffer, strlen(buffer));
         }
+        // delay_ms(1);
+
+        periph_motor1_test();
+        periph_motor2_test();
         delay_ms(1);
     }
 }

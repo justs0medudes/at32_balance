@@ -55,7 +55,7 @@ void periph_encoder_handle(void)
     encoder2_last = now2;
 
     // putting diff1 and diff2 inside int16_t
-    ma732.encoder1.rawdiff = diff1;
+    ma732.encoder1.rawdiff = -diff1;
     ma732.encoder2.rawdiff = diff2;
     // puts the raw angle data inside uint16_t
     // data format: 0-16383
