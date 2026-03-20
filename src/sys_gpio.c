@@ -92,7 +92,7 @@ void sys_gpio_init(void) {
     gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
     gpio_init(GPIOE, &gpio_init_struct);
 
-    gpio_bits_set(GPIOE, GPIO_PINS_7);
+    // gpio_bits_set(GPIOE, GPIO_PINS_7);
 
     // Configure TMR8 pins
     gpio_init_struct.gpio_pins = GPIO_PINS_7;

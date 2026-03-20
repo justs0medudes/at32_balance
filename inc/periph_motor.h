@@ -6,8 +6,7 @@
 #define AT32_BALANCE_V0_1_PERIPH_MOTOR_H
 
 #include <stdint.h>
-void periph_motor1_set_pwm(uint16_t u, uint16_t v, uint16_t w);
-void periph_motor2_set_pwm(uint16_t u, uint16_t v, uint16_t w);
+void periph_motor_set_pwm(uint8_t select, uint16_t u, uint16_t v, uint16_t w);
 void periph_motor1_test(void);
 void periph_motor2_test(void);
 

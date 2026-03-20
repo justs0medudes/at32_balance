@@ -9,7 +9,7 @@ set(PROJECT_NAME at32_balance_v0_1)
 # Include toolchain file
 include(${CMAKE_SOURCE_DIR}/gcc-arm-none-eabi.cmake)
 
-project(${PROJECT_NAME} LANGUAGES C ASM)
+project(${PROJECT_NAME} LANGUAGES C CXX ASM)
 
 # Enable compile command to ease indexing with e.g. clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -17,6 +17,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Define the build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -29,7 +32,9 @@ add_executable(${PROJECT_NAME})
 
 # Target sources
 target_sources(${PROJECT_NAME} PRIVATE
-    ${CMAKE_SOURCE_DIR}/src/main.c
+    ${CMAKE_SOURCE_DIR}/src/app_3pwm.cpp
+    ${CMAKE_SOURCE_DIR}/src/app_encoder.cpp
+    ${CMAKE_SOURCE_DIR}/src/main.cpp
     ${CMAKE_SOURCE_DIR}/src/sys_clock.c
     ${CMAKE_SOURCE_DIR}/src/sys_delay.c
     ${CMAKE_SOURCE_DIR}/src/sys_dma.c
@@ -53,6 +58,13 @@ target_sources(${PROJECT_NAME} PRIVATE
     # Startup (adjust filename!)
     ${CMAKE_SOURCE_DIR}/startup_at32f403a_407.s
 
+    ${CMAKE_SOURCE_DIR}/libraries/simplefoc/BLDCMotor.cpp
+    ${CMAKE_SOURCE_DIR}/libraries/simplefoc/common/base_classes/FOCMotor.cpp
+    ${CMAKE_SOURCE_DIR}/libraries/simplefoc/common/base_classes/sensor.cpp
+    ${CMAKE_SOURCE_DIR}/libraries/simplefoc/common/foc_utils.cpp
+    ${CMAKE_SOURCE_DIR}/libraries/simplefoc/common/pid.cpp
+    ${CMAKE_SOURCE_DIR}/libraries/simplefoc/common/lowpass_filter.cpp
+    ${CMAKE_SOURCE_DIR}/libraries/simplefoc/common/time_utils.cpp
     #[[
     IMPORTANT: Add every vendor library used in here!!!
     ]]
@@ -89,6 +101,10 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/libraries/drivers/inc
     ${CMAKE_SOURCE_DIR}/libraries/cmsis/cm4/core_support
     ${CMAKE_SOURCE_DIR}/libraries/cmsis/cm4/device_support
+    ${CMAKE_SOURCE_DIR}/libraries/arduino_stub
+    ${CMAKE_SOURCE_DIR}/libraries/simplefoc
+    ${CMAKE_SOURCE_DIR}/libraries/simplefoc/common
+    ${CMAKE_SOURCE_DIR}/libraries/simplefoc/common/base_classes
 )
 
 # Set macros
@@ -96,16 +112,18 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
     USE_STDPERIPH_DRIVER
     AT32F403AVGT7
     $<$<CONFIG:Debug>:DEBUG>
+    SIMPLEFOC_DISABLE_DEBUG
 )
 
 # Compiler options
 target_compile_options(${PROJECT_NAME} PRIVATE
-  -mcpu=cortex-m4
-  -mthumb
-  -ffunction-sections
-  -fdata-sections
-  -Wall
-  -Wextra
+    -mcpu=cortex-m4
+    -mthumb
+    -ffunction-sections
+    -fdata-sections
+    -Wall
+    -Wextra
+    -Wno-unused-parameter
 )
 
 

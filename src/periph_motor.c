@@ -8,17 +8,23 @@
 #include <at32f403a_407_tmr.h>
 
 
-void periph_motor1_set_pwm(const uint16_t u, const uint16_t v, const uint16_t w) {
-    TMR1->c1dt = u;
-    TMR1->c2dt = v;
-    TMR1->c3dt = w;
+void periph_motor_set_pwm(uint8_t select, const uint16_t u, const uint16_t v, const uint16_t w) {
+    switch (select) {
+        case 1:
+            TMR1->c1dt = u;
+            TMR1->c2dt = v;
+            TMR1->c3dt = w;
+            break;
+        case 2:
+            TMR8->c1dt = u;
+            TMR8->c2dt = v;
+            TMR8->c3dt = w;
+            break;
+        default:
+            break;
+    }
 }
 
-void periph_motor2_set_pwm(const uint16_t u, const uint16_t v, const uint16_t w) {
-    TMR8->c1dt = u;
-    TMR8->c2dt = v;
-    TMR8->c3dt = w;
-}
 
 float theta1 = 0.0f;
 void periph_motor1_test(void) {
@@ -34,7 +40,7 @@ void periph_motor1_test(void) {
     uint16_t pwm_v = (uint16_t)((v * 0.05f + 0.5f) * 6000.0f);
     uint16_t pwm_w = (uint16_t)((w * 0.05f + 0.5f) * 6000.0f);
 
-    periph_motor1_set_pwm(pwm_u, pwm_v, pwm_w);
+    periph_motor_set_pwm(1, pwm_u, pwm_v, pwm_w);
     // periph_motor_set_pwm(4000, 1000, 1000);
 }
 
@@ -52,6 +58,6 @@ void periph_motor2_test(void) {
     uint16_t pwm_v = (uint16_t)((v * 0.05f + 0.5f) * 6000.0f);
     uint16_t pwm_w = (uint16_t)((w * 0.05f + 0.5f) * 6000.0f);
 
-    periph_motor2_set_pwm(pwm_u, pwm_v, pwm_w);
+    periph_motor_set_pwm(2, pwm_u, pwm_v, pwm_w);
     // periph_motor_set_pwm(4000, 1000, 1000);
 }

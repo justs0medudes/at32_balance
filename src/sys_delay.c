@@ -44,3 +44,7 @@ void delay_us(uint32_t us)
         __NOP();
     }
 }
+
+uint32_t micros(void) {
+    return DWT->CYCCNT / (g_core_hz / 1000000U);
+}

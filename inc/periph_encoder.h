@@ -2,14 +2,17 @@
 #define AT32_BALANCE_V0_1_PERIPH_ENCODER_H
 
 #include <stdint.h>
+#include <stdlib.h>
 uint16_t periph_encoder1_read(void);
 uint16_t periph_encoder2_read(void);
 void periph_encoder_init(void);
-void periph_encoder_handle(void);
+void periph_encoder1_handle(void);
+void periph_encoder2_handle(void);
 
 typedef struct {
     uint16_t rawangle;
     int16_t rawdiff;
+    float angle_rad;
     float angle_deg;
     float diff_rad;
     float diff_deg;

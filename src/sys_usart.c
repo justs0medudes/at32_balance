@@ -18,8 +18,8 @@
 
 volatile uint8_t Tx3_buffer[BUFFER_SIZE];
 volatile uint8_t Rx3_buffer[BUFFER_SIZE];
-u8 sys_usart3_data[BUFFER_SIZE];
-u8 sys_usart3_idle_flag = 0;
+uint8_t sys_usart3_data[BUFFER_SIZE];
+uint8_t sys_usart3_idle_flag = 0;
 volatile uint16_t sys_usart3_rx_len = 0;
 
 // currently set up for USART3 Tx
