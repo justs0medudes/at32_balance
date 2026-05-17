@@ -1,0 +1,8 @@
+//
+// Created by Simon Gong on 2026-05-15.
+//
+
+#ifndef AT32_BALANCE_V0_1_SYS_STARTUP_H
+#define AT32_BALANCE_V0_1_SYS_STARTUP_H
+
+#endif //AT32_BALANCE_V0_1_SYS_STARTUP_H
